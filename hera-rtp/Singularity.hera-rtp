@@ -34,7 +34,7 @@ From: ubuntu:18.04
 %post
   # Update Ubuntu packages and install neccesary packages
   apt-get update && apt-get install -y git wget vim build-essential
-  apt-get clean
+  # apt-get clean
   # DONE with OS install and update
 
   # Define environment variable for conda install path
