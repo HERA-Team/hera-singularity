@@ -16,11 +16,11 @@ From: ubuntu:18.04
 
 
 # Commands to be executed on the host system outside of the container after the base OS has been installed.
-%setup
+# %setup
 
 
 # Copy files from the host system to the container
-%files
+# %files
 
 
 # Define environment variables that will be set at runtime.
@@ -100,18 +100,18 @@ From: ubuntu:18.04
 # The contents of the %runscript section are written to a file within the
 # container that is executed when the container image is run (either via the
 # `singularity run` command or by executing the container directly as a command).
-%runscript
+# %runscript
 
 
 # The contents of the %startscript section are written to a file within
 # the container at build time, and this file is executed when the instance
 # start command is issued. The instance command run the container as a deamon.
-%startscript
+# %startscript
 
 
 # Commands in %test are run at the very end of the build process and can be
 # turned off with --notest tag in singularity commands
-%test
+# %test
 
 
 %labels
