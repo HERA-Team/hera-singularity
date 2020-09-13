@@ -11,7 +11,7 @@
 #   hera_notebook_templates (https://github.com/HERA-Team/hera_notebook_templates)
 #   hera_mc (https://github.com/HERA-Team/hera_mc; required by hera_notebook_templates)
 # =============================================================================
-Bootstrap: library
+Bootstrap: docker
 From: ubuntu:18.04
 
 
