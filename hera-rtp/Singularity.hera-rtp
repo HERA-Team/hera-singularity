@@ -12,7 +12,7 @@
 #   hera_mc (https://github.com/HERA-Team/hera_mc; required by hera_notebook_templates)
 # =============================================================================
 Bootstrap: docker
-From: ubuntu:20.04
+From: ubuntu:bionic
 
 
 # Commands to be executed on the host system outside of the container after the base OS has been installed.
@@ -33,7 +33,8 @@ From: ubuntu:20.04
 # These commands are executed as root in /root inside the container.
 %post
   # Update Ubuntu packages and install neccesary packages
-  apt-get update && apt-get install -y git wget
+  apt-get update
+  apt-get install -y git wget
   # apt-get clean
   # DONE with OS install and update
 
