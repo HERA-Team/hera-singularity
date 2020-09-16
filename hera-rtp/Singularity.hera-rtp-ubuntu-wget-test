@@ -32,18 +32,19 @@ From: ubuntu:18.04
 # Commands to be executed at build time after the base OS has been installed.
 # These commands are executed as root in /root inside the container.
 %post
-#   # Update Ubuntu packages and install neccesary packages
+  # Update Ubuntu packages and install neccesary packages
   apt-get update
   apt-get install -y git wget
-#   # apt-get clean
-#   # DONE with OS install and update
+  # apt-get clean
+  # DONE with OS install and update
 
-#   # Download and install miniconda
+  # Download and install miniconda
+  cd /usr/local
   wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
   # Define environment variable for conda install path
   # CONDA_INSTALL_PATH="/usr/local/miniconda3"
   # bash Miniconda3-latest-Linux-x86_64.sh -b -p $CONDA_INSTALL_PATH
-#
+
 #   # Make conda executable available during build.
 #   # This does not make the executable available during runtime.
 #   export PATH="$CONDA_INSTALL_PATH/bin:$PATH"
