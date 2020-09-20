@@ -35,13 +35,17 @@ From: ubuntu:18.04
 #   # Update Ubuntu packages and install neccesary packages
   apt-get update
   apt-get install -y git wget
-#   # apt-get clean
-#   # DONE with OS install and update
-#
-#   # Define environment variable for conda install path
+  # apt-get clean
+  echo "DONE with OS install and update"
+
+  echo "Define environment variable for conda install path"
+  ROOT_INSTALL_PATH="/usr/local"
   CONDA_INSTALL_PATH="/usr/local/miniconda3"
-#   # Download and install miniconda
+  echo "Change to install directory"
+  cd $ROOT_INSTALL_PATH
+  echo "Download and install miniconda"
   wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+  echo "Install conda"
   bash Miniconda3-latest-Linux-x86_64.sh -b -p $CONDA_INSTALL_PATH
 #
 #   # Make conda executable available during build.
