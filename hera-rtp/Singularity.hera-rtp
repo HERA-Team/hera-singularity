@@ -1,6 +1,7 @@
 # =============================================================================
 # Definition file for a singularity container for HERA RTP
-# This containe consists of a miniconda base with:
+# This containe consists of a miniconda base on Ubuntu 18.04 with
+# the following Python packages:
 #   pyuvdata (https://github.com/RadioAstronomySoftwareGroup/pyuvdata/)
 #   linsolve (https://github.com/HERA-Team/linsolve)
 #   uvtools (https://github.com/HERA-Team/uvtools)
@@ -10,9 +11,11 @@
 #   hera_pipelines (https://github.com/HERA-Team/hera_pipelines)
 #   hera_notebook_templates (https://github.com/HERA-Team/hera_notebook_templates)
 #   hera_mc (https://github.com/HERA-Team/hera_mc; required by hera_notebook_templates)
+#
+# Empty sections are commented out to avoid unexpcted builder bugs.
 # =============================================================================
 Bootstrap: docker
-From: ubuntu:bionic
+From: ubuntu:18.04
 
 
 # Commands to be executed on the host system outside of the container after the base OS has been installed.
@@ -24,9 +27,7 @@ From: ubuntu:bionic
 
 
 # Define environment variables that will be set at runtime.
-# %environment
-  # Not really sure which locale should be set in the container ...
-  # export LC_ALL=C
+# %environmen
 
 
 # Commands to be executed at build time after the base OS has been installed.
@@ -38,9 +39,12 @@ From: ubuntu:bionic
   # apt-get clean
   # DONE with OS install and update
 
-  # Define environment variable for conda install path
+  # Define environment variables for install paths
+  ROOT_INSTALL_PATH="/usr/local"
   CONDA_INSTALL_PATH="/usr/local/miniconda3"
+  HERA_PACKAGES_PATH="/usr/local/hera"
   # Download and install miniconda
+  cd $ROOT_INSTALL_PATH
   wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
   bash Miniconda3-latest-Linux-x86_64.sh -b -p $CONDA_INSTALL_PATH
 
@@ -63,10 +67,8 @@ From: ubuntu:bionic
   # Install hera_packages
   # To give user some flexibility, we will git clone and pip install .
   # The source codes will be cloned to /usr/local/hera
-  # Define environment variable for the install path for hera packages
-  HERA_INSTALL_PATH="/usr/local/hera"
-  mkdir $HERA_INSTALL_PATH
-  cd $HERA_INSTALL_PATH
+  mkdir $HERA_PACKAGES_PATH
+  cd $HERA_PACKAGES_PATH
   # linsolve is used in most hera software packages and should be installed first
   # hera_qm should be installed before hera_cal as the latter requires the former
   # hera_mc installation has a step that sets up database configuration file,
@@ -88,13 +90,13 @@ From: ubuntu:bionic
   echo ". $CONDA_INSTALL_PATH/etc/profile.d/conda.sh" >> $SINGULARITY_ENVIRONMENT
 
   # Also export HERA_INSTALL_PATH and CONDA_INSTALL_PATH variables to the container
-  echo 'export HERA_INSTALL_PATH=$HERA_INSTALL_PATH' >> $SINGULARITY_ENVIRONMENT
+  echo 'export HERA_PACKAGES_PATH=$HERA_PACKAGES_PATH' >> $SINGULARITY_ENVIRONMENT
   echo 'export CONDA_INSTALL_PATH=$CONDA_INSTALL_PATH' >> $SINGULARITY_ENVIRONMENT
 
   # List installed environments and check environment variables at start
   echo "Done building HERA RTP singularity container"
   echo "miniconda installed path is $CONDA_INSTALL_PATH"
-  echo "HERA packages path is $HERA_INSTALL_PATH"
+  echo "HERA packages path is $HERA_PACKAGES_PATH"
   conda env list
 
 
