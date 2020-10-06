@@ -87,11 +87,11 @@ From: ubuntu:18.04
   # conda modifications to the .bashrc do not work. We need to modify the
   # $SINGULARITY_ENVIRONMENT variable to make the containeer sources
   # the conda modification script at runtime
-  echo ". $CONDA_INSTALL_PATH/etc/profile.d/conda.sh" >> $SINGULARITY_ENVIRONMENT
+  echo ". $CONDA_INSTALL_PATH/etc/profile.d/conda.sh" >>$SINGULARITY_ENVIRONMENT
 
   # Also export HERA_INSTALL_PATH and CONDA_INSTALL_PATH variables to the container
-  echo 'export HERA_PACKAGES_PATH=$HERA_PACKAGES_PATH' >> $SINGULARITY_ENVIRONMENT
-  echo 'export CONDA_INSTALL_PATH=$CONDA_INSTALL_PATH' >> $SINGULARITY_ENVIRONMENT
+  echo 'export HERA_PACKAGES_PATH=$HERA_PACKAGES_PATH' >>$SINGULARITY_ENVIRONMENT
+  echo 'export CONDA_INSTALL_PATH=$CONDA_INSTALL_PATH' >>$SINGULARITY_ENVIRONMENT
 
   # List installed environments and check environment variables at start
   echo "Done building HERA RTP singularity container"
