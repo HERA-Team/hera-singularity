@@ -35,7 +35,7 @@ From: ubuntu:18.04
 %post
   # Update Ubuntu packages and install neccesary packages
   apt-get update
-  apt-get install -y git wget
+  apt-get install -y git wget vim
   # apt-get clean
   # DONE with OS install and update
 
