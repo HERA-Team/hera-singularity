@@ -27,7 +27,11 @@ From: ubuntu:18.04
 
 
 # Define environment variables that will be set at runtime.
-# %environmen
+%environment
+  # Use bash as default shell
+  SINGULARITY_SHELL=/bin/bash
+  # Force locale ... this may be needed.
+  LC_ALL=C
 
 
 # Commands to be executed at build time after the base OS has been installed.
@@ -42,7 +46,7 @@ From: ubuntu:18.04
   # Define environment variables for install paths
   ROOT_INSTALL_PATH="/usr/local"
   CONDA_INSTALL_PATH="/usr/local/miniconda3"
-  HERA_PACKAGES_PATH="/usr/local/hera"
+  HERA_INSTALL_PATH="/usr/local/hera"
   # Download and install miniconda
   cd $ROOT_INSTALL_PATH
   wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
@@ -67,8 +71,8 @@ From: ubuntu:18.04
   # Install hera_packages
   # To give user some flexibility, we will git clone and pip install .
   # The source codes will be cloned to /usr/local/hera
-  mkdir $HERA_PACKAGES_PATH
-  cd $HERA_PACKAGES_PATH
+  mkdir $HERA_INSTALL_PATH
+  cd $HERA_INSTALL_PATH
   # linsolve is used in most hera software packages and should be installed first
   # hera_qm should be installed before hera_cal as the latter requires the former
   # hera_mc installation has a step that sets up database configuration file,
@@ -80,23 +84,25 @@ From: ubuntu:18.04
     pip install .
     cd ..
   done
-  # Only need to clone hera_pipelines
+  # # Only need to clone hera_pipelines
   git clone https://github.com/HERA-Team/hera_pipelines
 
   # The shell in singularity runs in a special environment, so the standard
   # conda modifications to the .bashrc do not work. We need to modify the
   # $SINGULARITY_ENVIRONMENT variable to make the containeer sources
   # the conda modification script at runtime
-  echo ". $CONDA_INSTALL_PATH/etc/profile.d/conda.sh" >>$SINGULARITY_ENVIRONMENT
+  echo ". $CONDA_INSTALL_PATH/etc/profile.d/conda.sh" >> $SINGULARITY_ENVIRONMENT
+  # Activate the base environment
+  # echo "conda activate" >> $SINGULARITY_ENVIRONMENT
 
   # Also export HERA_INSTALL_PATH and CONDA_INSTALL_PATH variables to the container
-  echo 'export HERA_PACKAGES_PATH=$HERA_PACKAGES_PATH' >>$SINGULARITY_ENVIRONMENT
-  echo 'export CONDA_INSTALL_PATH=$CONDA_INSTALL_PATH' >>$SINGULARITY_ENVIRONMENT
+  echo "export HERA_INSTALL_PATH=$HERA_INSTALL_PATH" >> $SINGULARITY_ENVIRONMENT
+  echo "export CONDA_INSTALL_PATH=$CONDA_INSTALL_PATH" >> $SINGULARITY_ENVIRONMENT
 
   # List installed environments and check environment variables at start
   echo "Done building HERA RTP singularity container"
   echo "miniconda installed path is $CONDA_INSTALL_PATH"
-  echo "HERA packages path is $HERA_PACKAGES_PATH"
+  echo "HERA packages path is $HERA_INSTALL_PATH"
   conda env list
 
 
