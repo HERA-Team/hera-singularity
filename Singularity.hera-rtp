@@ -27,20 +27,19 @@ From: ubuntu:18.04
 
 
 # Define environment variables that will be set at runtime.
-%environment
-  # Use bash as default shell
-  SINGULARITY_SHELL=/bin/bash
-  # Force locale ... this may be needed.
-  # LC_ALL=C
+# %environment
 
 
 # Commands to be executed at build time after the base OS has been installed.
 # These commands are executed as root in /root inside the container.
 %post
+  # Use bash as default shell
+  SHELL=/bin/bash
+
   # Update Ubuntu packages and install neccesary packages
   apt-get update
   apt-get install -y git wget vim
-  # apt-get clean
+  apt-get clean
   # DONE with OS install and update
 
   # Define environment variables for install paths
@@ -62,8 +61,8 @@ From: ubuntu:18.04
   # Install dependencies for HEREA packages.
   # All dependencies are available in conda although the conda epheem
   # package seems to be too old for hera_cal.
-  conda install -c conda-forge numpy scipy scikit-learn h5py astropy aipy \
-    pyyaml matplotlib ephem pandas cartopy sqlalchemy psycopg2 alembic \
+  conda install -c conda-forge ipython numpy scipy scikit-learn h5py astropy \
+    aipy pyyaml matplotlib ephem pandas cartopy sqlalchemy psycopg2 alembic \
     python-dateutil tabulate psutil redis-py setuptools_scm mako
   # pyuvdata gets an honourable mention here
   conda install -c conda-forge pyuvdata
