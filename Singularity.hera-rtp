@@ -92,7 +92,7 @@ From: ubuntu:18.04
   # the conda modification script at runtime
   echo ". $CONDA_INSTALL_PATH/etc/profile.d/conda.sh" >> $SINGULARITY_ENVIRONMENT
   # Activate the base environment
-  echo "conda activate" >> $SINGULARITY_ENVIRONMENT
+  # echo "conda activate" >> $SINGULARITY_ENVIRONMENT
 
   # Also export HERA_INSTALL_PATH and CONDA_INSTALL_PATH variables to the container
   echo "export HERA_INSTALL_PATH=$HERA_INSTALL_PATH" >> $SINGULARITY_ENVIRONMENT
