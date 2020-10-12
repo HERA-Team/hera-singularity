@@ -31,7 +31,7 @@ From: ubuntu:18.04
   # Use bash as default shell
   SINGULARITY_SHELL=/bin/bash
   # Force locale ... this may be needed.
-  LC_ALL=C
+  # LC_ALL=C
 
 
 # Commands to be executed at build time after the base OS has been installed.
