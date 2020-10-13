@@ -33,19 +33,24 @@ From: ubuntu:18.04
 # Commands to be executed at build time after the base OS has been installed.
 # These commands are executed as root in /root inside the container.
 %post
-  # Use bash as default shell
-  SHELL=/bin/bash
-
   # Update Ubuntu packages and install neccesary packages
   apt-get update
   apt-get install -y git wget vim
   apt-get clean
+
+  # Fix locale bugs see https://github.com/hpcng/singularity/issues/11
+  apt-get install -y locales
+  echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen
+  locale-gen && update-locale LANG=en_US.UTF-8
+
   # DONE with OS install and update
 
   # Define environment variables for install paths
   ROOT_INSTALL_PATH="/usr/local"
   CONDA_INSTALL_PATH="/usr/local/miniconda3"
   HERA_INSTALL_PATH="/usr/local/hera"
+  CONDA_INIT_SCRIPT="$CONDA_INSTALL_PATH/etc/profile.d/conda.sh"
+
   # Download and install miniconda
   cd $ROOT_INSTALL_PATH
   wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
@@ -53,7 +58,7 @@ From: ubuntu:18.04
 
   # Make conda executable available during build and update.
   # This does not make the executable available during runtime.
-  . $CONDA_INSTALL_PATH/etc/profile.d/conda.sh && conda update -n base conda
+  . $CONDA_INIT_SCRIPT && conda update -n base conda
 
   # Create an RTP enviroment and install dependencies for HEREA packages.
   # All dependencies are available in conda although the conda epheem
@@ -63,34 +68,27 @@ From: ubuntu:18.04
     alembic python-dateutil tabulate psutil redis-py setuptools_scm mako \
     pyuvdata
 
-  # Activate rtp to pip install to the environment
-  conda activate rtp
+  # Install hera_packages. For debugging purpose, we will clone and pip install. .
 
-  # Install hera_packages
-  # To give user some flexibility, we will git clone and pip install .
-  # The source codes will be cloned to /usr/local/hera
-  mkdir $HERA_INSTALL_PATH
-  cd $HERA_INSTALL_PATH
+  # Activate rtp to pip install to the environment and ake directory for the source codes.
+  conda activate rtp && mkdir $HERA_INSTALL_PATH && cd $HERA_INSTALL_PATH
+  # Loop over, clone and pip install.
   # linsolve is used in most hera software packages and should be installed first
   # hera_qm should be installed before hera_cal as the latter requires the former
   # hera_mc installation has a step that sets up database configuration file,
   # which is not currently done and not sure if it will be needed ...
   for pkg in linsolve uvtools hera_qm hera_cal hera_opm hera_mc hera_notebook_templates
   do
-    git clone https://github.com/HERA-Team/$pkg
-    cd $pkg
-    pip install .
-    cd ..
+    git clone https://github.com/HERA-Team/$pkg && cd $pkg && pip install . && cd ..
   done
-  # # Only need to clone hera_pipelines
+  # Only need to clone hera_pipelines
   git clone https://github.com/HERA-Team/hera_pipelines
 
   # Export HERA_INSTALL_PATH and CONDA_INSTALL_PATH variables to the container
   echo "export HERA_INSTALL_PATH=$HERA_INSTALL_PATH" >> $SINGULARITY_ENVIRONMENT
   echo "export CONDA_INSTALL_PATH=$CONDA_INSTALL_PATH" >> $SINGULARITY_ENVIRONMENT
-
-  # This alias provide a quick way to manually source conda.sh if need.
-  echo "alias source_conda_init_script='source $CONDA_INSTALL_PATH/etc/profile.d/conda.sh'" >> /etc/bash.bashrc
+  # This environment avariable will be useful when needing to initialize conda
+  echo "export CONDA_INIT_SCRIPT=$CONDA_INIT_SCRIPT" >> $SINGULARITY_ENVIRONMENT
 
   # List installed environments and check environment variables at start
   echo "miniconda installed path is $CONDA_INSTALL_PATH"
