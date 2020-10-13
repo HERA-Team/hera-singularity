@@ -38,9 +38,8 @@ From: ubuntu:18.04
 
   # Update Ubuntu packages and install neccesary packages
   apt-get update
-  apt-get install -y wget
-  # apt-get install -y git wget vim
-  # apt-get clean
+  apt-get install -y git wget vim
+  apt-get clean
   # DONE with OS install and update
 
   # Define environment variables for install paths
@@ -52,30 +51,21 @@ From: ubuntu:18.04
   wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
   bash Miniconda3-latest-Linux-x86_64.sh -b -p $CONDA_INSTALL_PATH
 
-  # Make conda executable available during build.
+  # Make conda executable available during build and update.
   # This does not make the executable available during runtime.
-  # export PATH="$CONDA_INSTALL_PATH/bin:$PATH"
   . $CONDA_INSTALL_PATH/etc/profile.d/conda.sh && conda update -n base conda
-
-  # Make sure conda is up-to-date
-  # conda update -n base conda
 
   # Create an RTP enviroment and install dependencies for HEREA packages.
   # All dependencies are available in conda although the conda epheem
   # package seems to be too old for hera_cal.
-  conda create -n rtp -c conda-forge pip
-  # conda create -n rtp -c conda-forge ipython numpy scipy scikit-learn h5py \
-  #   astropy aipy pyyaml matplotlib ephem pandas cartopy sqlalchemy psycopg2 \
-  #   alembic python-dateutil tabulate psutil redis-py setuptools_scm mako \
-  #   pyuvdata
+  conda create -n rtp -c conda-forge ipython numpy scipy scikit-learn h5py \
+    astropy aipy pyyaml matplotlib ephem pandas cartopy sqlalchemy psycopg2 \
+    alembic python-dateutil tabulate psutil redis-py setuptools_scm mako \
+    pyuvdata
 
-  # which conda
-  # which pip
-  # conda env list
-  # conda init bash
-
+  # Activate rtp to pip install to the environment
   conda activate rtp
-  which pip
+
   # Install hera_packages
   # To give user some flexibility, we will git clone and pip install .
   # The source codes will be cloned to /usr/local/hera
@@ -85,46 +75,28 @@ From: ubuntu:18.04
   # hera_qm should be installed before hera_cal as the latter requires the former
   # hera_mc installation has a step that sets up database configuration file,
   # which is not currently done and not sure if it will be needed ...
-  # for pkg in linsolve uvtools hera_qm hera_cal hera_opm hera_mc hera_notebook_templates
-  # do
-  #   git clone https://github.com/HERA-Team/$pkg
-  #   cd $pkg
-  #   pip install .
-  #   cd ..
-  # done
+  for pkg in linsolve uvtools hera_qm hera_cal hera_opm hera_mc hera_notebook_templates
+  do
+    git clone https://github.com/HERA-Team/$pkg
+    cd $pkg
+    pip install .
+    cd ..
+  done
   # # Only need to clone hera_pipelines
-  # git clone https://github.com/HERA-Team/hera_pipelines
-
-  # The shell in singularity runs in a special environment, so the standard
-  # conda modifications to the .bashrc do not work. We need to modify the
-  # $SINGULARITY_ENVIRONMENT variable to make the containeer sources
-  # the conda modification script at runtime
-
-  # DEBUG: This line make conda available but not python. Need to source conda.sh
-  # echo ". $CONDA_INSTALL_PATH/etc/profile.d/conda.sh && export CONDA_INSTALL_PATH=$CONDA_INSTALL_PATH && export HERA_INSTALL_PATH=$HERA_INSTALL_PATH" >> $SINGULARITY_ENVIRONMENT
-
-  # See if this execute 91-environmeent.sh with bash script ...
-  # echo "#!/bin/bash" >> $SINGULARITY_ENVIRONMENT
-
-  # Require specifying shell optioon, i.e. `singularity shell -s /bin/bash ...`
-  # This makes >>> conda initialize >>> line show up in .bashrc
-  # echo "source $CONDA_INSTALL_PATH/etc/profile.d/conda.sh" >> $SINGULARITY_ENVIRONMENT
-
-  # Activate the base environment
-  # echo "conda activate" >> $SINGULARITY_ENVIRONMENT
+  git clone https://github.com/HERA-Team/hera_pipelines
 
   # Export HERA_INSTALL_PATH and CONDA_INSTALL_PATH variables to the container
   echo "export HERA_INSTALL_PATH=$HERA_INSTALL_PATH" >> $SINGULARITY_ENVIRONMENT
   echo "export CONDA_INSTALL_PATH=$CONDA_INSTALL_PATH" >> $SINGULARITY_ENVIRONMENT
 
-  # This alias provide a quick way to manually source conda.sh if needed.
+  # This alias provide a quick way to manually source conda.sh if need.
   echo "alias source_conda_init_script='source $CONDA_INSTALL_PATH/etc/profile.d/conda.sh'" >> /etc/bash.bashrc
 
   # List installed environments and check environment variables at start
+  echo "miniconda installed path is $CONDA_INSTALL_PATH"
+  echo "HERA packages path is $HERA_INSTALL_PATH"
+  conda env list
   echo "Done building HERA RTP singularity container"
-  # echo "miniconda installed path is $CONDA_INSTALL_PATH"
-  # echo "HERA packages path is $HERA_INSTALL_PATH"
-  # conda env list
 
 
 # The contents of the %runscript section are written to a file within the
