@@ -1,4 +1,6 @@
-# hera-rtp-singularity
+# hera-singularity
+[![https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg](https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg)](https://singularity-hub.org/collections/4892)
+
 This repository contains recipes of singularity containers for HERA software. The recipes are remotely built on Singularity Hub. Currently, there are two recipes in the repo:
 
 - rtp: a container for the HERA RTP software pipeline
@@ -7,6 +9,7 @@ This repository contains recipes of singularity containers for HERA software. Th
 We are currently experimenting with running the HERA RTP pipeline on the ilifu cluster with these two containers.
 
 Suggestion for other containers for the broader collaboration and contribution are welcome!
+
 
 ## About Container and Singularity
 Containers are encapsulated software environments and abstract the software and applications from the underlying operating system. This allows users to run workflows in customized environments, switch between environments, and to share these environments with colleagues and research teams.
@@ -18,11 +21,11 @@ Singularity is a free, cross-platform and open-source computer program that perf
 ### Pull
 Use `singularity pull` to download the container from Singularity Hub
 ```
-$ singularity pull [name_to_save_the_imagee_(optional)] shub://HERA-Team/hera-rtp-singularity:<recipe>
+$ singularity pull [name_to_save_the_imagee_(optional)] shub://HERA-Team/hera-singularity:<recipe>
 ```
 For example,
 ```
-$ singularity pull rtp.sif shub://HERA-Team/hera-rtp-singularity:rtp
+$ singularity pull rtp.sif shub://HERA-Team/hera-singularity:rtp
 INFO:    Downloading shub image
  1.98 GiB / 1.98 GiB [=======================================================] 100.00% 13.12 MiB/s 2m34s
  ```
