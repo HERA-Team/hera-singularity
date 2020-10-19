@@ -15,7 +15,7 @@
 # Empty sections are commented out to avoid unexpcted builder bugs.
 # =============================================================================
 Bootstrap: docker
-From: ubuntu:18.04
+From: ubuntu:20.04
 
 
 # Commands to be executed on the host system outside of the container after the base OS has been installed.
