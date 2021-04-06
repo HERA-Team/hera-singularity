@@ -12,6 +12,7 @@
 #     - pyuvdata (https://github.com/RadioAstronomySoftwareGroup/pyuvdata/)
 #     - pyuvsim (https://github.com/RadioAstronomySoftwareGroup/pyuvsim)
 #     - pyradiosky (https://github.com/RadioAstronomySoftwareGroup/pyradiosky)
+#     - pygdsm (https://github.com/telegraphic/pygdsm)
 # =============================================================================
 Bootstrap: docker
 From: ubuntu:20.04
@@ -75,6 +76,8 @@ From: ubuntu:20.04
   do
     pip install git+https://github.com/HERA-Team/$pkg
   done
+  # Install pygdsm
+  pip install git+https://github.com/telegraphic/pygdsm
 
   # Export CONDA_INSTALL_PATH variables to the container
   echo "export CONDA_INSTALL_PATH=$CONDA_INSTALL_PATH" >> $SINGULARITY_ENVIRONMENT
