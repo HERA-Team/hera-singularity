@@ -62,7 +62,7 @@ From: ubuntu:20.04
   conda create -n hera1 -c conda-forge python=3.8 numpy scipy scikit-learn \
     matplotlib astropy astroquery pyuvdata h5py aipy pyyaml healpy \
     astropy-healpix click ipykernel pandas cartopy xarray netcdf4 h5netcdf \
-    mpi4py dask
+    mpi4py dask jupyterlab ipympl
 
   # Install hera_packages. For debugging purpose, we will clone and pip install .
 
