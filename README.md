@@ -1,6 +1,13 @@
 # hera-singularity
 [![https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg](https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg)](https://singularity-hub.org/collections/4892)
 
+## Notice
+
+__April 27, 2021__:
+[Singularity Hub remote built service is no longer available.](https://singularityhub.github.io/singularityhub-docs/2021/going-read-only/) We are considering other alternative. The old Singularity Hub builds can still be accessed via the badge link above, which now redirects to DataLad. The `singularity pull` can also do the pull from datalad URL. We will manually build and upload to Ilifu for the time being.
+
+---
+
 This repository contains recipe files for building singularity containers for the HERA software suits. The containers are remotely built on Singularity Hub when the recipes are pushed to the `main` branch. Container images can be directly download from the the badge link above or by using the `singularity pull` command line (see [below](##-Singularity-Commands)). Ilifu users, make sure to read [Specific Usages for Ilifu](###-Specific-Usages-for-Ilifu) section and check the relevant page on the HERA wiki.
 
 
