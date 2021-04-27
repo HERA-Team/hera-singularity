@@ -48,7 +48,7 @@ From: ubuntu:20.04
   # Define environment variables for install paths
   ROOT_INSTALL_PATH="/usr/local"
   CONDA_INSTALL_PATH="/usr/local/miniconda3"
-  HERA_INSTALL_PATH="/usr/local/hera"
+  # HERA_INSTALL_PATH="/usr/local/hera"
   CONDA_INIT_SCRIPT="$CONDA_INSTALL_PATH/etc/profile.d/conda.sh"
 
   # Download and install miniconda
@@ -63,36 +63,44 @@ From: ubuntu:20.04
   # Create an RTP enviroment and install dependencies for HEREA packages.
   # All dependencies are available in conda although the conda epheem
   # package seems to be too old for hera_cal.
-  conda create -n RTP -c conda-forge ipython numpy scipy scikit-learn h5py \
-    astropy aipy pyyaml matplotlib ephem pandas cartopy sqlalchemy psycopg2 \
-    alembic python-dateutil tabulate psutil redis-py setuptools_scm mako \
-    pyuvdata
+  conda create -n rtp -c conda-forge python=3.8 numpy scipy scikit-learn \
+    matplotlib astropy astroquery pyuvdata h5py aipy pyyaml healpy \
+    astropy-healpix click ipykernel pandas cartopy xarray netcdf4 h5netcdf \
+    mpi4py dask jupyterlab ipympl alembic psycopg2 redis-py
+
+    # ephem sqlalchemy psycopg2 \
+    # alembic python-dateutil tabulate psutil redis-py setuptools_scm mako \
+
 
   # Install hera_packages. For debugging purpose, we will clone and pip install. .
 
   # Activate rtp to pip install to the environment and ake directory for the source codes.
-  conda activate RTP && mkdir $HERA_INSTALL_PATH && cd $HERA_INSTALL_PATH
+  conda activate rtp
+  # conda activate rtp && mkdir $HERA_INSTALL_PATH && cd $HERA_INSTALL_PATH
+
   # Loop over, clone and pip install.
   # linsolve is used in most hera software packages and should be installed first
   # hera_qm should be installed before hera_cal as the latter requires the former
   # hera_mc installation has a step that sets up database configuration file,
   # which is not currently done and not sure if it will be needed ...
-  for pkg in linsolve uvtools hera_qm hera_cal hera_opm hera_mc hera_notebook_templates
+  for pkg in linsolve uvtools hera_qm hera_cal hera_sim hera_opm hera_mc hera_notebook_templates
   do
-    git clone https://github.com/HERA-Team/$pkg && cd $pkg && pip install . && cd ..
+    pip install git+https://github.com/HERA-Team/$pkg
+    # git clone https://github.com/HERA-Team/$pkg && cd $pkg && pip install . && cd ..
   done
   # Only need to clone hera_pipelines
-  git clone https://github.com/HERA-Team/hera_pipelines
+  cd /usr/local && git clone https://github.com/HERA-Team/hera_pipelines
 
   # Export HERA_INSTALL_PATH and CONDA_INSTALL_PATH variables to the container
-  echo "export HERA_INSTALL_PATH=$HERA_INSTALL_PATH" >> $SINGULARITY_ENVIRONMENT
+  # echo "export HERA_INSTALL_PATH=$HERA_INSTALL_PATH" >> $SINGULARITY_ENVIRONMENT
+  echo "export HERA_PIPELINES_PATH=/usr/local/hera_pipelines" >> $SINGULARITY_ENVIRONMENT
   echo "export CONDA_INSTALL_PATH=$CONDA_INSTALL_PATH" >> $SINGULARITY_ENVIRONMENT
   # This environment avariable will be useful when needing to initialize conda
   echo "export CONDA_INIT_SCRIPT=$CONDA_INIT_SCRIPT" >> $SINGULARITY_ENVIRONMENT
 
   # List installed environments and check environment variables at start
   echo "miniconda installed path is $CONDA_INSTALL_PATH"
-  echo "HERA packages path is $HERA_INSTALL_PATH"
+  # echo "HERA packages path is $HERA_INSTALL_PATH"
   conda env list
   echo "Done building HERA RTP singularity container"
 
