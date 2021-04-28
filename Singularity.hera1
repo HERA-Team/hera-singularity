@@ -14,7 +14,7 @@
 #     - pyradiosky (https://github.com/RadioAstronomySoftwareGroup/pyradiosky)
 #     - pygdsm (https://github.com/telegraphic/pygdsm)
 # =============================================================================
-Bootstrap: docker
+Bootstrap: library
 From: ubuntu:20.04
 
 
