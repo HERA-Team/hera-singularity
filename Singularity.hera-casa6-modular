@@ -31,7 +31,9 @@ From: ubuntu:18.04
 # -----------------------------------------------------------------------------
 %post
   # Update Ubuntu packages and install necessary packages
+  apt-get install -y software-properties-common
   apt-get update
+  add-apt-repository universe
   apt-get install -y git wget vim libgfortran3 libopenmpi-dev
 
   # Fix locale bugs see https://github.com/hpcng/singularity/issues/11
