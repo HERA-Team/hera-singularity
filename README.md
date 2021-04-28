@@ -6,6 +6,9 @@
 __April 27, 2021__:
 [Singularity Hub remote built service is no longer available.](https://singularityhub.github.io/singularityhub-docs/2021/going-read-only/) We are considering other alternative. The old Singularity Hub builds can still be accessed via the badge link above, which now redirects to DataLad. The `singularity pull` can also do the pull from datalad URL. We will manually build and upload to Ilifu for the time being.
 
+__April 28, 2021__:
+The containers have been built and are available at `/ilifu/astro/projects/hera/containers`, with a few additional new containers that will be documented soon. We will keep rebuilding and replacing these files weekly, to keep the software stack up to date with the development, until we have an automated solution.
+
 ---
 
 This repository contains recipe files for building singularity containers for the HERA software suits. The containers are remotely built on Singularity Hub when the recipes are pushed to the `main` branch. Container images can be directly download from the the badge link above or by using the `singularity pull` command line (see [below](##-Singularity-Commands)). Ilifu users, make sure to read [Specific Usages for Ilifu](###-Specific-Usages-for-Ilifu) section and check the relevant page on the HERA wiki.
