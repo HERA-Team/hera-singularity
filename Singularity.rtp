@@ -38,7 +38,7 @@ From: ubuntu:20.04
 
     # Define environment variables for install paths
     ROOT_INSTALL_PATH="/usr/local"
-    CONDA_INSTALL_PATH="/usr/local/miniconda3"
+    CONDA_INSTALL_PATH="$ROOT_INSTALL_PATH/miniconda3"
     CONDA_INIT_SCRIPT="$CONDA_INSTALL_PATH/etc/profile.d/conda.sh"
 
     # Download and install miniconda
@@ -59,7 +59,7 @@ From: ubuntu:20.04
     psutil line_profiler \
     alembic psycopg2 redis-py
 
-  # Activate `rtp`
+  # Activate the Python environment
   conda activate rtp
 
   # Install pyuvsim and dependencies
@@ -80,7 +80,7 @@ From: ubuntu:20.04
   # Clone hera_pipelines
   cd /usr/local && git clone https://github.com/HERA-Team/hera_pipelines
 
-  echo "Done building HERA RTP singularity container"
+  echo "== Done building container =="
 
 
 %labels
