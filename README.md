@@ -27,35 +27,36 @@ Suggestion for other container recipes and implementations are welcome!
 ## Container Content
 
 ### Python Packages
-All containers are built with `Ubuntu 20.04` and `miniconda`, and come standard with the following Python modules:
+All containers are built with `Ubuntu 20.04` and `miniconda` with `python=3.8` unless otherwise specify [below](###-Different-Between-Containers:), and come standard with the following packages:
 
-- `python=3.8`
-- `numpy`
-- `scipy`
-- `scikit-learn`
-- `matplotlib`
-- `astropy`
-- `astropy-healpix`
-- `healpy`
-- `pyuvdata`
-- `pandas`
-- `cartopy`
-- `xarray`
-- `dask`
-- `mpi4py`
-- `jupyterlab`
+| Data Analysis  | Astronomical       | HERA         |
+| -------------- | ------------------ | ------------ |
+| `dask`         | `aipy`             | `linsolve`   |
+| `jupyterlab`   | `astropy`          | `uvtools`    |
+| `matplotlib`   | `astropy-healpix`  | `hera_qm`    |
+| `numpy`        | `astroquery`       | `hera_cal`   |
+| `pandas`       | `cartopy`          | `hera_sim`   |
+| `scipy`        | `healpy`           | `hera_psepc` |
+| `scikit-learn` | `pyuvdata`<sup>[1](#myfootnote1)</sup>         |
+| `xarray`       | `pyuvsim`<sup>[2](#myfootnote2)</sup>          |
 
-Availability of HERA software differs between the containers:
+<a name="myfootnote2">1</a>: with CASA measurement sets, HEALPix beam, and CST beam functionalities\
+<a name="myfootnote1">2</a>: with profiling and full simulator
+
+### Different Between Containers:
 
 - `hera1`:
-  - Intended to be a general purpose container
-  - Has `linsolve`, `uvtools`, `hera_qm`, `hera_cal`, and `hera_sim`
+  - Intended for general-purpose computing with most of the commonly used data analysis, astronomical, and HERA software packages
 - `rtp`:
-  - For running the HERA RTP software pipeline via `makeflow`
-  - Has all in `hera1` with an addition of `hera_opm`, `hera_mc`, and  `hera_notebook_templates`.
+  - For running the RTP pipeline and analysis with `makeflow`.
+  - Equivalent to `hera1` with an addition of `hera_opm`, `hera_mc`, and  `hera_notebook_templates`.
   - `hera_pipelines` is cloned to `/usr/local`
-- `debug`:
-  - For experimental built
+- `casa_imaging`:
+  - Equivalent to `hera1` with a full installation of `casa-6`
+- `casa6_modular`:
+  - Equivalent to `hera1` with a pip-wheel installation of `casa-6`, making `casatasks`, `casatools`, and `casampi` packages available (see https://casa-pip.nrao.edu/).
+  - Based on `Python 3.6` and `Ubuntu 18.04` for casa-pip compatibility.
+
 
 ### Environment Variables
 The following environment variables are also exported in all containers:
@@ -133,6 +134,9 @@ Singularity containers run as the user and share host services. When Singularity
 By default, the user home directory on the host system will be mapped to the user home directory in the container, preserving all file permission. On Ilifu, the shared data paths on the host are also mapped.
 
 ### Specific Usages for Ilifu
+
+#### Container File Locations
+Recent builds are available at `/ilifu/astro/projects/hera/containers`
 
 #### Using a HERA container as a Jupyter kernel
 
