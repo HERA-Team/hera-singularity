@@ -1,7 +1,7 @@
 # =============================================================================
 # Definition file for a singularity container for HERA
 # This container is inteded for general purpose work on the HERA software stack.
-# It contain most scientific Python packages and HERA software (expect pspec).
+# It contain most scientific Python packages and HERA software.
 # =============================================================================
 Bootstrap: library
 From: ubuntu:20.04
@@ -66,7 +66,7 @@ From: ubuntu:20.04
   # linsolve is used in most hera software and should be installed first
   # hera_qm should be installed before hera_cal
   # pyuvsim and pyradiosky will be automatically installed by hera_sim
-  for pkg in linsolve uvtools hera_qm hera_cal hera_sim
+  for pkg in linsolve uvtools hera_qm hera_cal hera_sim hera_pspec
   do
     pip install git+https://github.com/HERA-Team/$pkg
   done
@@ -110,4 +110,4 @@ From: ubuntu:20.04
 
 %help
   This container is inteded for general purpose work on the HERA software stack.
-  It contain most scientific Python packages and HERA software (expect pspec).
+  It contain most scientific Python packages and HERA software.
