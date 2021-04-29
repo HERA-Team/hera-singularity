@@ -1,28 +1,26 @@
 # =============================================================================
 # Definition file for a singularity container for HERA
-# This container is for general purpose work. It consists of
-#   - a miniconda base on Ubuntu 20.04
-#   - a `casa6` conda environment that has:
-#     - python=3.6
-#     - numpy, scipy, astropy, astroquery, matplotlib, and etc (see line 61)
-#     - linsolve (https://github.com/HERA-Team/linsolve)
-#     - uvtools (https://github.com/HERA-Team/uvtools)
-#     - hera_cal (https://github.com/HERA-Team/hera_cal)
-#     - hera_sim (https://github.com/HERA-Team/hera_sim)
-#     - pyuvdata (https://github.com/RadioAstronomySoftwareGroup/pyuvdata/)
-#     - pyuvsim (https://github.com/RadioAstronomySoftwareGroup/pyuvsim)
-#     - pyradiosky (https://github.com/RadioAstronomySoftwareGroup/pyradiosky)
-#     - pygdsm (https://github.com/telegraphic/pygdsm)
+# This container is equivalent to `hera1` with an addition of pip-wheel
+# installation of CASA-6, making `casatasks`, `casatools`, and `casampi`
+# packages available (see https://casa-pip.nrao.edu/).
+# Note:
+# 1. This container is built with Ubuntu 18.04 as the casa pakcages
+# requires some library not available in newer Ubuntu release.
+# 2. The Python version is 3.6 as the casa packages are only fully supported
+# on this Python version at the moment.
 # =============================================================================
 Bootstrap: library
 From: ubuntu:18.04
 
 
 # -----------------------------------------------------------------------------
-# - Pre-build environment variables -
+# - Runtime environment variables -
 # Define environment variables that will be set at runtime.
 # -----------------------------------------------------------------------------
-# %environment
+%environment
+  export CONDA_INSTALL_PATH="/usr/local/miniconda3"
+  export CONDA_INIT_SCRIPT="$CONDA_INSTALL_PATH/etc/profile.d/conda.sh"
+
 
 # -----------------------------------------------------------------------------
 # - Built commands -
@@ -31,15 +29,16 @@ From: ubuntu:18.04
 # -----------------------------------------------------------------------------
 %post
   # Update Ubuntu packages and install necessary packages
-  apt-get install -y software-properties-common
-  apt-get update
-  add-apt-repository universe
+  # libgfortran3 and libopenmpi-dev are required for casa
+  apt-get install -y software-properties-common && \
+  apt-get update && \
+  add-apt-repository universe && \
   apt-get install -y git wget vim libgfortran3 libopenmpi-dev
 
   # Fix locale bugs see https://github.com/hpcng/singularity/issues/11
-  apt-get install -y locales
-  echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen
-  locale-gen && update-locale LANG=en_US.UTF-8
+  apt-get install -y locales && \
+  echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen && \
+  locale-gen && update-locale LANG=en_US.UTF-8 && \
 
   apt-get clean
 
@@ -47,13 +46,14 @@ From: ubuntu:18.04
 
   # Define environment variables for install paths
   ROOT_INSTALL_PATH="/usr/local"
-  CONDA_INSTALL_PATH="/usr/local/miniconda3"
+  CONDA_INSTALL_PATH="$ROOT_INSTALL_PATH/miniconda3"
   CONDA_INIT_SCRIPT="$CONDA_INSTALL_PATH/etc/profile.d/conda.sh"
 
   # Download and install miniconda
-  cd $ROOT_INSTALL_PATH
-  wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-  bash Miniconda3-latest-Linux-x86_64.sh -b -p $CONDA_INSTALL_PATH
+  cd $ROOT_INSTALL_PATH && \
+  wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+  bash Miniconda3-latest-Linux-x86_64.sh -b -p $CONDA_INSTALL_PATH && \
+  rm Miniconda3-latest-Linux-x86_64.sh
 
   # Make conda executable available during build and update.
   # This does not make the executable available during runtime.
@@ -62,72 +62,50 @@ From: ubuntu:18.04
   # Create `hera1` enviroment and install dependencies for HEREA packages.
   # All dependencies are available in conda although the conda ephem
   # package seems to be too old for hera_cal.
-  conda create -n casa6 -c conda-forge python=3.6 numpy scipy scikit-learn \
-    matplotlib astropy astroquery pyuvdata h5py aipy pyyaml healpy \
-    astropy-healpix click ipykernel pandas cartopy xarray netcdf4 h5netcdf \
-    mpi4py dask jupyterlab ipympl
+  conda create -n casa6 -c conda-forge python=3.6 ipykernel numpy scipy \
+    scikit-learn matplotlib pandas astropy astropy-healpix astroquery \
+    aipy healpy pyuvdata h5py pyyaml click python-casacore cartopy \
+    xarray netcdf4 h5netcdf mpi4py dask jupyterlab ipympl \
+    psutil line_profiler
 
-  # Install hera_packages. For debugging purpose, we will clone and pip install .
-
-  # Activate `hera1`, make directory for the source codes, pip install ..
+  # Activate the Python environment
   conda activate casa6
-  # Loop over and pip install.
+
+  # Install pyuvsim and dependencies
+  pip install lunarsky
+  pip install pyradiosky[all]
+  pip install pyuvsim[all]
+
+  # Install pygdsm
+  pip install git+https://github.com/telegraphic/pygdsm
+
+  # Install HERA packages.
   # linsolve is used in most hera software and should be installed first
   # hera_qm should be installed before hera_cal
-  # pyuvsim and pyradiosky will be automatically installed by hera_sim
-  for pkg in linsolve uvtools hera_qm hera_cal hera_sim
+  for pkg in linsolve uvtools hera_qm hera_cal hera_sim hera_pspec
   do
     pip install git+https://github.com/HERA-Team/$pkg
   done
-  # Install pygdsm
-  pip install git+https://github.com/telegraphic/pygdsm && \
+
   # Install CASA
   pip install --index-url https://casa-pip.nrao.edu/repository/pypi-casa-release/simple casatools && \
   pip install --index-url https://casa-pip.nrao.edu/repository/pypi-casa-release/simple casatasks && \
   pip install wheel && \
   pip install --index-url https://casa-pip.nrao.edu/repository/pypi-casa-release/simple casampi
 
-  # Export CONDA_INSTALL_PATH variables to the container
-  echo "export CONDA_INSTALL_PATH=$CONDA_INSTALL_PATH" >> $SINGULARITY_ENVIRONMENT
-  # This CONDA_INIT_SCRIPT variable will be useful for initializing conda
-  echo "export CONDA_INIT_SCRIPT=$CONDA_INIT_SCRIPT" >> $SINGULARITY_ENVIRONMENT
-
-  # List installed environments and check environment variables at start
-  echo "miniconda installed path is $CONDA_INSTALL_PATH"
-  conda env list
-  echo "Done building HERA RTP singularity container"
-
-
-# -----------------------------------------------------------------------------
-# - run scripts -
-# The contents of the %runscript section are written to a file within the
-# container that is executed when the container image is run (either via the
-# `singularity run` command or by executing the container directly as a command).
-# -----------------------------------------------------------------------------
-# %runscript
-
-
-# -----------------------------------------------------------------------------
-# - start scripts -
-# The contents of the %startscript section are written to a file within
-# the container at build time, and this file is executed when the instance
-# start command is issued. The instance command run the container as a deamon.
-# -----------------------------------------------------------------------------
-# %startscript
-
-
-# -----------------------------------------------------------------------------
-# - test scripts -
-# Commands in %test are run at the very end of the build process and can be
-# turned off with --notest tag in singularity commands
-# -----------------------------------------------------------------------------
-# %test
+  echo "== Done building container =="
 
 
 %labels
   Author HERA Team
-  Version v0.0.1
 
 
 %help
-  This is a container for general purpose work on HERA
+  This container is equivalent to `hera1` with an addition of pip-wheel
+  installation of CASA-6, making `casatasks`, `casatools`, and `casampi`
+  packages available (see https://casa-pip.nrao.edu/).
+  Note:
+  1. This container is built with Ubuntu 18.04 as the casa pakcages
+  requires some library not available in newer Ubuntu release.
+  2. The Python version is 3.6 as the casa packages are only fully supported
+  on this Python version at the moment.
