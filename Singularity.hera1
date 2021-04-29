@@ -1,28 +1,20 @@
 # =============================================================================
 # Definition file for a singularity container for HERA
-# This container is for general purpose work. It consists of
-#   - a miniconda base on Ubuntu 20.04
-#   - a `hera1` conda environment that has:
-#     - python=3.8
-#     - numpy, scipy, astropy, astroquery, matplotlib, and etc (see line 61)
-#     - linsolve (https://github.com/HERA-Team/linsolve)
-#     - uvtools (https://github.com/HERA-Team/uvtools)
-#     - hera_cal (https://github.com/HERA-Team/hera_cal)
-#     - hera_sim (https://github.com/HERA-Team/hera_sim)
-#     - pyuvdata (https://github.com/RadioAstronomySoftwareGroup/pyuvdata/)
-#     - pyuvsim (https://github.com/RadioAstronomySoftwareGroup/pyuvsim)
-#     - pyradiosky (https://github.com/RadioAstronomySoftwareGroup/pyradiosky)
-#     - pygdsm (https://github.com/telegraphic/pygdsm)
+# This container is inteded for general purpose work on the HERA software stack.
+# It contain most scientific Python packages and HERA software (expect pspec).
 # =============================================================================
 Bootstrap: library
 From: ubuntu:20.04
 
 
 # -----------------------------------------------------------------------------
-# - Pre-build environment variables -
+# - Runtime environment variables -
 # Define environment variables that will be set at runtime.
 # -----------------------------------------------------------------------------
-# %environment
+%environment
+  export CONDA_INSTALL_PATH="/usr/local/miniconda3"
+  export CONDA_INIT_SCRIPT="$CONDA_INSTALL_PATH/etc/profile.d/conda.sh"
+
 
 # -----------------------------------------------------------------------------
 # - Built commands -
@@ -31,14 +23,15 @@ From: ubuntu:20.04
 # -----------------------------------------------------------------------------
 %post
   # Update Ubuntu packages and install necessary packages
-  apt-get update
-  apt-get install -y git wget vim
-  apt-get clean
+  apt-get update && apt-get install -y git wget vim
+
 
   # Fix locale bugs see https://github.com/hpcng/singularity/issues/11
-  apt-get install -y locales
-  echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen
+  apt-get install -y locales && \
+  echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen && \
   locale-gen && update-locale LANG=en_US.UTF-8
+
+  apt-get clean
 
   # DONE with OS install and update
 
@@ -48,9 +41,10 @@ From: ubuntu:20.04
   CONDA_INIT_SCRIPT="$CONDA_INSTALL_PATH/etc/profile.d/conda.sh"
 
   # Download and install miniconda
-  cd $ROOT_INSTALL_PATH
-  wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-  bash Miniconda3-latest-Linux-x86_64.sh -b -p $CONDA_INSTALL_PATH
+  cd $ROOT_INSTALL_PATH && \
+  wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+  bash Miniconda3-latest-Linux-x86_64.sh -b -p $CONDA_INSTALL_PATH && \
+  rm Miniconda3-latest-Linux-x86_64.sh
 
   # Make conda executable available during build and update.
   # This does not make the executable available during runtime.
@@ -59,10 +53,10 @@ From: ubuntu:20.04
   # Create `hera1` enviroment and install dependencies for HEREA packages.
   # All dependencies are available in conda although the conda ephem
   # package seems to be too old for hera_cal.
-  conda create -n hera1 -c conda-forge python=3.8 numpy scipy scikit-learn \
-    matplotlib astropy astroquery pyuvdata h5py aipy pyyaml healpy \
-    astropy-healpix click ipykernel pandas cartopy xarray netcdf4 h5netcdf \
-    mpi4py dask jupyterlab ipympl
+  conda create -n hera1 -c conda-forge python=3.8 ipykernel numpy scipy \
+    scikit-learn matplotlib pandas astropy astropy-healpix astroquery \
+    aipy healpy pyuvdata h5py pyyaml click python-casacore cartopy \
+    xarray netcdf4 h5netcdf mpi4py dask jupyterlab ipympl
 
   # Install hera_packages. For debugging purpose, we will clone and pip install .
 
@@ -76,17 +70,10 @@ From: ubuntu:20.04
   do
     pip install git+https://github.com/HERA-Team/$pkg
   done
+
   # Install pygdsm
   pip install git+https://github.com/telegraphic/pygdsm
 
-  # Export CONDA_INSTALL_PATH variables to the container
-  echo "export CONDA_INSTALL_PATH=$CONDA_INSTALL_PATH" >> $SINGULARITY_ENVIRONMENT
-  # This CONDA_INIT_SCRIPT variable will be useful for initializing conda
-  echo "export CONDA_INIT_SCRIPT=$CONDA_INIT_SCRIPT" >> $SINGULARITY_ENVIRONMENT
-
-  # List installed environments and check environment variables at start
-  echo "miniconda installed path is $CONDA_INSTALL_PATH"
-  conda env list
   echo "Done building HERA RTP singularity container"
 
 
@@ -122,4 +109,5 @@ From: ubuntu:20.04
 
 
 %help
-  This is a container for general purpose work on HERA
+  This container is inteded for general purpose work on the HERA software stack.
+  It contain most scientific Python packages and HERA software (expect pspec).
