@@ -25,7 +25,6 @@ From: ubuntu:20.04
   # Update Ubuntu packages and install necessary packages
   apt-get update && apt-get install -y git wget vim
 
-
   # Fix locale bugs see https://github.com/hpcng/singularity/issues/11
   apt-get install -y locales && \
   echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen && \
@@ -51,15 +50,11 @@ From: ubuntu:20.04
   . $CONDA_INIT_SCRIPT && conda update -n base conda
 
   # Create `hera1` enviroment and install dependencies for HEREA packages.
-  # All dependencies are available in conda although the conda ephem
-  # package seems to be too old for hera_cal.
   conda create -n hera1 -c conda-forge python=3.8 ipykernel numpy scipy \
     scikit-learn matplotlib pandas astropy astropy-healpix astroquery \
     aipy healpy pyuvdata h5py pyyaml click python-casacore cartopy \
     xarray netcdf4 h5netcdf mpi4py dask jupyterlab ipympl \
     psutil line_profiler
-
-  # Install hera_packages. For debugging purpose, we will clone and pip install .
 
   # Activate `hera1`
   conda activate hera1
@@ -83,35 +78,8 @@ From: ubuntu:20.04
   echo "Done building HERA RTP singularity container"
 
 
-# -----------------------------------------------------------------------------
-# - run scripts -
-# The contents of the %runscript section are written to a file within the
-# container that is executed when the container image is run (either via the
-# `singularity run` command or by executing the container directly as a command).
-# -----------------------------------------------------------------------------
-# %runscript
-
-
-# -----------------------------------------------------------------------------
-# - start scripts -
-# The contents of the %startscript section are written to a file within
-# the container at build time, and this file is executed when the instance
-# start command is issued. The instance command run the container as a deamon.
-# -----------------------------------------------------------------------------
-# %startscript
-
-
-# -----------------------------------------------------------------------------
-# - test scripts -
-# Commands in %test are run at the very end of the build process and can be
-# turned off with --notest tag in singularity commands
-# -----------------------------------------------------------------------------
-# %test
-
-
 %labels
   Author HERA Team
-  Version v0.0.1
 
 
 %help
