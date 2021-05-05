@@ -20,7 +20,7 @@ From: ubuntu:20.04
   export CASA_INSTALL_PATH="/usr/local/$CASA_VERSION"
   export CONDA_INSTALL_PATH="/usr/local/miniconda3"
   export CONDA_INIT_SCRIPT="$CONDA_INSTALL_PATH/etc/profile.d/conda.sh"
-  export PATH=$PATH:"$CONDA_INSTALL_PATH/condabin/conda:/usr/local/$CASA_VERSION/bin"
+  export PATH=$PATH:"$CONDA_INSTALL_PATH/condabin:/usr/local/$CASA_VERSION/bin"
 
 
 # -----------------------------------------------------------------------------
