@@ -63,7 +63,7 @@ From: ubuntu:18.04
   # Create `hera1` enviroment and install dependencies for HEREA packages.
   # All dependencies are available in conda although the conda ephem
   # package seems to be too old for hera_cal.
-  conda create -n casa6 -c conda-forge python=3.6 ipykernel numpy scipy \
+  conda create -n casa6 -c conda-forge python=3.6 ipython ipykernel numpy scipy \
     scikit-learn matplotlib pandas astropy astropy-healpix astroquery \
     aipy healpy pyuvdata h5py pyyaml click python-casacore cartopy \
     xarray netcdf4 h5netcdf mpi4py dask jupyterlab ipympl aplpy \
