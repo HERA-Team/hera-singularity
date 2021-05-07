@@ -20,6 +20,7 @@ From: ubuntu:18.04
 %environment
   export CONDA_INSTALL_PATH="/usr/local/miniconda3"
   export CONDA_INIT_SCRIPT="$CONDA_INSTALL_PATH/etc/profile.d/conda.sh"
+  export PATH=$PATH:"$CONDA_INSTALL_PATH/condabin"
 
 
 # -----------------------------------------------------------------------------
