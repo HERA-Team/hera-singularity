@@ -60,7 +60,7 @@ From: ubuntu:18.04
   # This does not make the executable available during runtime.
   . $CONDA_INIT_SCRIPT && conda update -n base conda
 
-  # Create `hera1` enviroment and install dependencies for HEREA packages.
+  # Create `casa6` enviroment and install dependencies for HEREA packages.
   # All dependencies are available in conda although the conda ephem
   # package seems to be too old for hera_cal.
   conda create -n casa6 -c conda-forge python=3.6 ipython ipykernel numpy scipy \

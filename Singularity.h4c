@@ -51,7 +51,7 @@ From: ubuntu:20.04
   # This does not make the executable available during runtime.
   . $CONDA_INIT_SCRIPT && conda update -n base conda
 
-  # Create `rtp` enviroment and install dependencies for HEREA packages.
+  # Create `h4c` enviroment and install dependencies for HEREA packages.
   conda create -n h4c -c conda-forge python=3.8 ipython ipykernel numpy scipy \
     scikit-learn matplotlib pandas astropy astropy-healpix astroquery \
     aipy healpy pyuvdata h5py pyyaml click python-casacore cartopy \
