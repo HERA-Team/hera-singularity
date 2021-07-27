@@ -1,7 +1,32 @@
 # =============================================================================
-# Definition file for a singularity container for HERA
-# This container is inteded for general purpose work on the HERA software stack.
-# It contain most scientific Python packages and HERA software.
+# Definition file for singularity containers for the HERA software stack.
+# All containers come standard with the following Python packages:
+#
+# |-------------------------------------------------|
+# |  Data Analysis |  Astronomical    |  HERA       |
+# |----------------|------------------|-------------|
+# |  dask	         |  aipy	          |  linsolve   |
+# |  jupyterlab	   |  astropy	        |  uvtools    |
+# |  matplotlib	   |  astropy-healpix	|  hera_qm    |
+# |  numpy	       |  astroquery	    |  hera_cal   |
+# |  pandas	       |  cartopy	        |  hera_sim   |
+# |  scipy	       |  healpy	        |  hera_psepc |
+# |  scikit-learn	 |  pyuvdata1       |	            |
+# |  xarray	       |  pyuvsim         |             |
+# |                |  SSINS3          |             |
+# |-------------------------------------------------|
+#
+# This container is intended for machine learning related work, and come with
+# the following addition:
+# - emupy (https://github.com/nkern/emupy)
+# - zreion (https://github.com/plaplant/zreion)
+# - 21cmFAST=3.1.1
+# - powerbox
+# - tensorflow
+# - pytorch
+# - keras
+# - sympy
+# - numexpr
 # =============================================================================
 Bootstrap: library
 From: ubuntu:20.04
@@ -50,14 +75,25 @@ From: ubuntu:20.04
   . $CONDA_INIT_SCRIPT && conda update -n base conda
 
   # Create `hera1` enviroment and install dependencies for HEREA packages.
-  conda create -n hera1 -c conda-forge python=3.8 ipython ipykernel numpy scipy \
+  conda create -n tau -c conda-forge python=3.8 ipython ipykernel numpy scipy \
     scikit-learn matplotlib pandas astropy astropy-healpix astroquery \
     aipy healpy pyuvdata h5py pyyaml click python-casacore cartopy \
     xarray netcdf4 h5netcdf mpi4py dask jupyterlab ipympl \
-    psutil line_profiler spiceypy pytest
+    psutil line_profiler spiceypy pytest \
+    21cmFAST=3.1.1 tensorflow sympy numexpr keras keras-tuner \
+    pytorch pydot scikit-learn-intelex pyfftw pydot
 
   # Activate the Python environment
-  conda activate hera1
+  conda activate tau
+
+  # Install powerbox
+  pip install powerbox
+
+  # Install emupy
+  pip install git+https://github.com/nkern/emupy.git
+
+  # Install zreion
+  pip install git+https://github.com/plaplant/zreion.git
 
   # Install pyuvsim and dependencies
   pip install lunarsky
@@ -86,5 +122,5 @@ From: ubuntu:20.04
 
 
 %help
-  This container is inteded for general purpose work on the HERA software stack.
-  It contain most scientific Python packages and HERA software.
+  Singulariy container for the HERA software stack.
+  See https://github.com/HERA-Team/hera-singularity for more information.
