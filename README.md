@@ -55,6 +55,17 @@ We are currently building the following variances.
   - `hera_pipelines` is cloned to `/usr/local`
 - `h4c`:
   - Almost equivalent to `rtp` except some specific branches on `hera_cal` and `pspec` for H4C analysis.
+- `tau`:
+  - This container is `hera1` with extra tools for simulation, machine learning, and etc. Specifically, it contains the following additions:
+    # - emupy (https://github.com/nkern/emupy)
+    # - zreion (https://github.com/plaplant/zreion)
+    # - 21cmFAST=3.1.1
+    # - powerbox
+    # - tensorflow
+    # - pytorch
+    # - keras
+    # - sympy
+    # - numexpr
 
 ### Python Environment
 
