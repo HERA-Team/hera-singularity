@@ -30,9 +30,9 @@ All containers are built with `Ubuntu 20.04` and `miniconda` with `python=3.8` u
 | `numpy`        | `astroquery`       | `hera_cal`   |
 | `pandas`       | `cartopy`          | `hera_sim`   |
 | `scipy`        | `healpy`           | `hera_psepc` |
-| `scikit-learn` | `pyuvdata`<sup>[1](#myfootnote1)</sup>         |
-| `xarray`       | `pyuvsim`<sup>[2](#myfootnote2)</sup>          |
-|                | `SSINS`<sup>[3](#myfootnote3)</sup>          |
+| `scikit-learn` | `pyuvdata`<sup>[1](#myfootnote1)</sup> | `vis_cpu` |
+| `xarray`       | `pyuvsim`<sup>[2](#myfootnote2)</sup>  |
+|                | `SSINS`<sup>[3](#myfootnote3)</sup>    |
 
 <a name="myfootnote1">1</a>: With CASA measurement sets, HEALPix beam, and CST beam functionalities, see https://github.com/RadioAstronomySoftwareGroup/pyuvdata\
 <a name="myfootnote2">2</a>: With profiling and full simulator, see https://github.com/RadioAstronomySoftwareGroup/pyuvsim
