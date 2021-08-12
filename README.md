@@ -35,7 +35,7 @@ All containers are built with `Ubuntu 20.04` and `miniconda` with `python=3.8` u
 |                | `SSINS`<sup>[3](#myfootnote3)</sup>    |
 
 <a name="myfootnote1">1</a>: With CASA measurement sets, HEALPix beam, and CST beam functionalities, see https://github.com/RadioAstronomySoftwareGroup/pyuvdata\
-<a name="myfootnote2">2</a>: With profiling and full simulator, see https://github.com/RadioAstronomySoftwareGroup/pyuvsim
+<a name="myfootnote2">2</a>: without line profiler and lunar capability, see https://github.com/RadioAstronomySoftwareGroup/pyuvsim
 <a name="myfootnote3">3</a>: See https://github.com/mwilensky768/SSINS
 
 ### Variances:
@@ -78,8 +78,8 @@ The name of Conda environment in each container is the same as the container nam
 The following environment variables are also exported in all containers:
 
 ```
-CONDA_INSTALL_PATH="/usr/local/miniconda3"
-CONDA_INIT_SCRIPT="$CONDA_INSTALL_PATH/etc/profile.d/conda.sh"
+CONDA_PATH="/usr/local/miniconda3"
+CONDA_SH="$CONDA_PATH/etc/profile.d/conda.sh"
 ```
 
 The latter is especially useful to make the `conda` command available inside the container (see the section on [`singularly shell` usage](####-`shell`) below).
@@ -117,10 +117,10 @@ $ singularity shell rtp.sif
 Singularity> exec $SHELL
 ```
 
-b) Manually execute the conda initialization script inside singularity shell. The `CONDA_INIT_SCRIPT` environment variable pointing to the absolute path of the script (`/usr/local/miniconda3/etc/profile.d/conda.sh`), is made available for this purpose. Note that `.` must be used as `source` won't work under `sh`.
+b) Manually execute the conda initialization script inside singularity shell. The `CONDA_SH` environment variable pointing to the absolute path of the script (`/usr/local/miniconda3/etc/profile.d/conda.sh`), is made available for this purpose. Note that `.` must be used as `source` won't work under `sh`.
 ```
 $ singularity shell rtp.sif
-Singularity> . $CONDA_INIT_SCRIPT
+Singularity> . $CONDA_SH
 ```
 
 b) Specify `\bin\bash` as a shell to use when executing the `shell` command, either by using the `SINGULARITY_SHELL` environment variable,
