@@ -14,7 +14,7 @@
 # |  scikit-learn	 |  pyuvdata1       |	            |
 # |  xarray	       |  pyuvsim         |             |
 # |  mwa_preprocess|  SSINS3          |             |
-  |  calamity      |                  |             |
+# |  calamity      |                  |             |
 # |-------------------------------------------------|
 #
 # This container is intended for general purpose work.
@@ -98,7 +98,7 @@ From: ubuntu:20.04
   done
 
   # custom packages.
-  
+
   for pkg in calamity mwa_preprocess
   do
     pip install git+https://github.com/aewallwi/$pkg
