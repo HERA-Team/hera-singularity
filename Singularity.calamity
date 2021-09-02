@@ -34,7 +34,7 @@ From: ubuntu:20.04
   export CONDA_SH="$CONDA_PATH/etc/profile.d/conda.sh"
   # Prepend PATH with conda/python bin
   export PATH=${CONDA_PATH}/bin:${PATH}
-  export PATH=${CONDA_PATH}/envs/hera1/bin:${PATH}
+  export PATH=${CONDA_PATH}/envs/calamity/bin:${PATH}
 
 
 # -----------------------------------------------------------------------------
