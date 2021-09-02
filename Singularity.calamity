@@ -2,20 +2,20 @@
 # Definition file for singularity containers for the HERA software stack.
 # All containers come standard with the following Python packages:
 #
-# |-------------------------------------------------|
-# |  Data Analysis |  Astronomical    |  HERA       |
-# |----------------|------------------|-------------|
-# |  dask	         |  aipy	          |  linsolve   |
-# |  jupyterlab	   |  astropy	        |  uvtools    |
-# |  matplotlib	   |  astropy-healpix	|  hera_qm    |
-# |  numpy	       |  astroquery	    |  hera_cal   |
-# |  pandas	       |  cartopy	        |  hera_sim   |
-# |  scipy	       |  healpy	        |  hera_psepc |
-# |  scikit-learn	 |  pyuvdata1       |	            |
-# |  xarray	       |  pyuvsim         |             |
-# |  mwa_preprocess|  SSINS3          |             |
-# |  calamity      |                  |             |
-# |-------------------------------------------------|
+# |----------------------------------------------------|
+# |  Data Analysis |  Astronomical    |  HERA          |
+# |----------------|------------------|----------------|
+# |  dask	         |  aipy	          |  linsolve      |
+# |  jupyterlab	   |  astropy	        |  uvtools       |
+# |  matplotlib	   |  astropy-healpix	|  hera_qm       |
+# |  numpy	       |  astroquery	    |  hera_cal      |
+# |  pandas	       |  cartopy	        |  hera_sim      |
+# |  scipy	       |  healpy	        |  hera_psepc    |
+# |  scikit-learn	 |  pyuvdata1       |	 mwa_preprocess|
+# |  xarray	       |  pyuvsim         |  calamity      |
+# |  SSINS3        |                  |                |
+# |  tensorflow    |                  |                |
+# |----------------------------------------------------|
 #
 # This container is intended for general purpose work.
 # =============================================================================
@@ -70,15 +70,15 @@ From: ubuntu:20.04
   # This does not make the executable available during runtime.
   . $CONDA_SH && conda update -n base conda
 
-  # Create `hera1` enviroment and install dependencies for HEREA packages.
-  conda create -n hera1 -y -c conda-forge python=3.8 ipython ipykernel numpy scipy \
+  # Create `calamity` enviroment and install dependencies for HEREA packages.
+  conda create -n calamity -y -c conda-forge python=3.8 ipython ipykernel numpy scipy \
     scikit-learn matplotlib pandas astropy astropy-healpix astroquery \
     aipy healpy pyuvdata=2.1.5 h5py pyyaml click python-casacore cartopy \
     xarray netcdf4 h5netcdf mpi4py dask jupyterlab ipympl \
-    psutil pytest future
+    psutil pytest future tensorflow
 
   # Activate the Python environment
-  conda activate hera1
+  conda activate calamity
 
   # Install pyuvsim and pyradiosky
   pip install pyuvsim[sim]
@@ -113,5 +113,5 @@ From: ubuntu:20.04
 
 
 %help
-  This container is inteded for general purpose work on the HERA software stack.
+  This container is intended for general purpose work on the HERA software stack.
   It contain most scientific Python packages and HERA software.
