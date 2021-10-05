@@ -80,7 +80,7 @@ From: ubuntu:20.04
   conda activate hera1
 
   # Install pyuvsim and pyradiosky
-  pip install pyuvsim[sim]
+  pip install git+https://github.com/RadioAstronomySoftwareGroup/pyuvsim.git
 
   # Install pygdsm
   pip install git+https://github.com/telegraphic/pygdsm
