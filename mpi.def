@@ -89,7 +89,7 @@ From: ubuntu:20.04
   . $CONDA_SH && conda update -n base conda
 
   # Create `hera1` enviroment and install dependencies for HEREA packages.
-  conda create -n mpi -y -c conda-forge python=3.8 ipython ipykernel numpy scipy \
+  conda create -n mpi -y -c conda-forge python=3.8 ipython=7.31.1 ipykernel numpy scipy \
     scikit-learn matplotlib pandas astropy astropy-healpix astroquery \
     aipy healpy pyuvdata=2.1.5 h5py pyyaml click python-casacore cartopy \
     xarray netcdf4 h5netcdf mpi4py dask jupyterlab ipympl \
