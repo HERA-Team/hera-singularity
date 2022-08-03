@@ -5,15 +5,14 @@
 # |-------------------------------------------------|
 # |  Data Analysis |  Astronomical    |  HERA       |
 # |----------------|------------------|-------------|
-# |  dask	         |  aipy	          |  linsolve   |
-# |  jupyterlab	   |  astropy	        |  uvtools    |
-# |  matplotlib	   |  astropy-healpix	|  hera_qm    |
-# |  numpy	       |  astroquery	    |  hera_cal   |
-# |  pandas	       |  cartopy	        |  hera_sim   |
-# |  scipy	       |  healpy	        |  hera_psepc |
-# |  scikit-learn	 |  pyuvdata1       |	            |
-# |  xarray	       |  pyuvsim         |             |
-# |                |  SSINS3          |             |
+# |  numpy         |  aipy            |  linsolve   |
+# |  scipy         |  astropy         |  uvtools    |
+# |  matplotlib    |  astropy-healpix |  hera_qm    |
+# |  pandas        |  astroquery      |  hera_cal   |
+# |  scikit-learn  |  cartopy         |  hera_sim   |
+# |                |  healpy          |  hera_psepc |
+# |                |  pyuvdata        |  vis_cpu    |
+# |                |  pyuvsim         |             |
 # |-------------------------------------------------|
 #
 # This container is intended for general purpose work.
@@ -67,29 +66,30 @@ From: ubuntu:20.04
 
   # Make conda executable available during build and update.
   # This does not make the executable available during runtime.
-  . $CONDA_SH && conda update -n base conda
+  . $CONDA_SH && conda update -n base conda && \
 
   # Create `hera1` enviroment and install dependencies for HEREA packages.
   conda create -n hera1 -y -c conda-forge python=3.8 ipython=7.31.1 ipykernel numpy scipy \
     scikit-learn matplotlib pandas astropy astropy-healpix astroquery \
-    aipy healpy pyuvdata=2.1.5 h5py pyyaml click python-casacore cartopy \
-    xarray netcdf4 h5netcdf mpi4py dask jupyterlab ipympl \
-    psutil pytest future numba
+    aipy healpy pyuvdata h5py pyyaml click python-casacore cartopy mpi4py
 
   # Activate the Python environment
-  conda activate hera1
+  conda activate hera1 
+  
+  # Install RASG packages.
+  # healvis is not installed because it required numba, which requires 
+  # numpy<=1.21.5, numpy=1.21.5 causes pyuvdata importing issues.
+  # We could try to downgrade numpy further, but we not currently using
+  # healvis, so we might just not install it.
 
-  # Install pyuvsim and pyradiosky
+  # Install pyradiosky
+  pip install git+https://github.com/RadioAstronomySoftwareGroup/pyradiosky.git
+
+  # Install pyuvsim
   pip install git+https://github.com/RadioAstronomySoftwareGroup/pyuvsim.git
-
-  # Install healvis with gsm
-  pip install git+https://github.com/rasg-affiliates/healvis.git gsm
 
   # Install pygdsm
   pip install git+https://github.com/telegraphic/pygdsm
-
-  # Install SSINS
-  pip install git+https://github.com/mwilensky768/SSINS.git
 
   # Install HERA packages.
   # linsolve is used in most hera software and should be installed first
