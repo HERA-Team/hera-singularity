@@ -5,14 +5,14 @@
 # |-------------------------------------------------|
 # |  Data Analysis |  Astronomical    |  HERA       |
 # |----------------|------------------|-------------|
-# |  dask	         |  aipy	          |  linsolve   |
-# |  jupyterlab	   |  astropy	        |  uvtools    |
-# |  matplotlib	   |  astropy-healpix	|  hera_qm    |
-# |  numpy	       |  astroquery	    |  hera_cal   |
-# |  pandas	       |  cartopy	        |  hera_sim   |
-# |  scipy	       |  healpy	        |  hera_psepc |
-# |  scikit-learn	 |  pyuvdata1       |	            |
-# |  xarray	       |  pyuvsim         |             |
+# |  dask	   |  aipy	      |  linsolve   |
+# |  jupyterlab	   |  astropy	      |  uvtools    |
+# |  matplotlib	   |  astropy-healpix |  hera_qm    |
+# |  numpy	   |  astroquery      |  hera_cal   |
+# |  pandas	   |  cartopy	      |  hera_sim   |
+# |  scipy	   |  healpy	      |  hera_psepc |
+# |  scikit-learn  |  pyuvdata1       |	            |
+# |  xarray	   |  pyuvsim         |             |
 # |                |  SSINS3          |             |
 # |-------------------------------------------------|
 #
@@ -77,9 +77,9 @@ From: ubuntu:20.04
   . $CONDA_SH && conda update -n base conda
 
   # Create `rtp` enviroment and install dependencies for HEREA packages.
-  conda create -n rtp -c conda-forge python=3.8 ipython=7.31.1 ipykernel numpy scipy \
+  conda create -n rtp -c conda-forge python=3.10 ipython ipykernel numpy scipy \
     scikit-learn matplotlib pandas astropy astropy-healpix astroquery \
-    aipy healpy pyuvdata=2.1.5 h5py pyyaml click python-casacore cartopy \
+    aipy healpy pyuvdata h5py pyyaml click python-casacore cartopy \
     xarray netcdf4 h5netcdf mpi4py dask jupyterlab ipympl \
     psutil pytest future \
     alembic psycopg2 redis-py
@@ -88,22 +88,20 @@ From: ubuntu:20.04
   conda activate rtp
 
   # Install pyuvsim and pyradiosky
-  pip install pyuvsim[sim]
+  # pip install pyuvsim[sim]
 
   # Install pygdsm
-  pip install git+https://github.com/telegraphic/pygdsm
+  # pip install git+https://github.com/telegraphic/pygdsm
 
   # Install SSINS
   pip install git+https://github.com/mwilensky768/SSINS.git
 
   # Install HERA packages.
-  # linsolve is used in most hera software and should be installed first
-  # hera_qm should be installed before hera_cal
-  for pkg in linsolve uvtools hera_qm hera_cal vis_cpu hera_sim hera_pspec hera_opm hera_mc hera_notebook_templates
-  do
-    pip install git+https://github.com/HERA-Team/$pkg
-  done
-  # Clone hera_pipelines
+  pip install linsolve uvtools hera_qm hera-calibration vis_cpu hera_sim hera-mc hera_opm
+  pip install git+https://github.com/hera-team/hera_pspec
+  pip install --no-deps git+https://github.com/hera-team/hera_notebook_templates
+
+  # Also clone hera-pipelines
   cd /usr/local && git clone https://github.com/HERA-Team/hera_pipelines
 
   echo "== Done building container =="
